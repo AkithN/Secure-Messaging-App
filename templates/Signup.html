@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <style>
+        body {
+          
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("1.jpg");
+            background-position: center;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.7); /* Adjust the last value (0.8) for transparency */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+            max-width: 400px;
+            width: 100%;
+        }
+
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            border-color: #4CAF50; /* Updated input focus border color */
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #056b24af; /* Updated button background color */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #115209; /* Updated button hover color */
+        }
+
+        .white-label {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="white-label">REGISTER FORM</h2>
+        <form action="/dashboard" method="post">
+            <label for="username" class="white-label">Username:</label>
+            <input type="text" id="username" name="username" pattern="^[a-zA-Z-'\s]{1,40}$" required>
+            
+            <label for="password" class="white-label">Password:</label>
+            <input type="password" id="password" name="password" pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+            
+            <label for="role" class="white-label">Role:</label>
+            <select id="role" name="role" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            
+            <button type="submit" class="custom-btn" onclick="setSuccessMessage()">REGISTER</button>
+        </form>
+    </div>
+
+    <script>
+        function setSuccessMessage() {
+            var user = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var select = document.getElementById('role');
+            if(user !== "" && password !== "" && select.value !== ""){
+                alert("Registered successfully");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        .background {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            background-image: url("2.jpg");
+        }
+        
+        nav {
+            background-color: #151618; /* Updated navigation background color */
+            overflow: hidden;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: #0056b3; /* Updated navigation hover color */
+        }
+        
+        .tabs {
+            display: none;
+            padding: 20px;
+            background-color: #ffffff; /* Updated tab background color */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .active-tab {
+            display: block;
+        }
+        
+        form {
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Increased shadow */
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 18px; /* Slightly increased font size */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px; /* Increased margin */
+            color: #555; /* Darkened label color */
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px; /* Increased margin */
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px; /* Slightly rounded corners */
+            font-size: 18px;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #ff7e5f; /* Changed focus border color to match gradient */
+            outline: none;
+        }
+
+        .send-button,
+        .submit-button {
+            background-color: #ff7e5f; /* Button background color */
+            color: white;
+            padding: 14px; /* Increased padding */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            font-size: 18px; /* Button font size */
+        }
+
+        .send-button:hover,
+        .submit-button:hover {
+            background-color: #feb47b; /* Darker button color on hover */
+        }
+        
+        #encrypted-message-area,
+        #decrypted-message-area {
+            margin-top: 20px;
+            padding: 10px;
+            margin-left: 35%;
+            margin-right: 35%;
+            background-color: #f2f2f2;
+            border-radius: 8px;
+            display: none;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        
+        .decrypted-message-container {
+            margin-top: 20px;
+        }
+        
+        #decrypted-message {
+            display: block;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            color: #333;
+        }
+    
+        h2 {
+            text-align: center;
+            color: black;
+        }
+
+        .white-label {
+            color: black;
+        }
+
+        .logout-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background">
+        <nav>
+            <a href="#encryption-tab" onclick="showTab('encryption-tab')">ENCRYPTION</a>
+            <a href="#decryption-tab" onclick="showTab('decryption-tab')">DECRYPTION</a>
+        </nav>
+
+        <div id="encryption-tab" class="tabs active-tab">
+            <h2>Encryption Form</h2>
+            <form action="/encrypt" method="post">
+                <label for="original-message" class="white-label">Original Message:</label>
+                <textarea id="original-message" name="original-message" rows="4" cols="50" required></textarea>
+                <br>
+                <label for="role" class="white-label">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <br><br>
+                <button type="submit" class="send-button">SEND</button>
+            </form>
+            <div id="encrypted-message-area">
+                <h3>Encrypted Message:</h3>
+                <p id="message">{{ encrypted_message }}</p>
+            </div>
+        </div>
+
+        <div id="decryption-tab" class="tabs">
+            <h2>Decryption Form</h2>
+            <form id="decryption-form" action="/decrypt" method="post" onsubmit="handleDecryptionSubmit(event)">
+                <label for="decryption-username" class="white-label">Username:</label>
+                <input type="text" id="decryption-username" name="decryption-username" pattern="^[a-zA-Z-'\s]{1,40}$" required>
+
+                <label for="decryption-password" class="white-label">Password:</label>
+                <input type="password" id="decryption-password" name="decryption-password"
+                    pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+
+                <button type="submit" class="submit-button">SUBMIT</button>
+            </form>
+
+            <div id="decrypted-message-area">
+                <h3>Decrypted Message:</h3>
+                <label id="decrypted-message"></label> <!-- Add label for decrypted message -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var encryptedMessage = "{{ encrypted_message }}";
+    
+            if (encryptedMessage) {
+                alert("Encrypted Message:\n" + encryptedMessage);
+                document.getElementById('encrypted-message-area').style.display = 'block';
+            }
+        });
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            showTab('encryption-tab');
+        });
+    
+        function showTab(tabId) {
+            var tabs = document.getElementsByClassName('tabs');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active-tab');
+            }
+    
+            var selectedTab = document.getElementById(tabId);
+            selectedTab.classList.add('active-tab');
+        }
+    
+        function handleDecryptionSubmit(event) {
+            event.preventDefault();
+            var form = event.target;
+            var formData = new FormData(form);
+            fetch(form.action, {
+                method: form.method,
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    document.getElementById('decrypted-message').innerText = data.message;
+                    document.getElementById('decrypted-message-area').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
